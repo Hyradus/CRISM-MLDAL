@@ -8,7 +8,7 @@ import rasterio as rio
 from spectral import envi
 import numpy as np
 from skimage.io import imsave
-import csv
+#import csv
 
 ######### Create dictionary with Spectral Indexes and NaN values (SpIndx) ####
 
@@ -101,6 +101,6 @@ for subdir, dirs, files in os.walk(workdir): # reading filepaths
                              print('Present but already computed', IDX[i][0])
                          
                                               
-def save_images(array):
-    pass
+#def save_images(array):
+#    pass
     
