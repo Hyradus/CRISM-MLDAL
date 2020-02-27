@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import cv2 as cv
 path= r'D:\TEMP\CRISM_Selected_Datasets\2008_067\processed'
 spectral_index = ('OLINDEX3', 'LCPINDEX2', 'HCPINDEX2', 'BD2100_2', 'BD1900_2', 'BDI1000VIS', 'D2300', 'SINDEX2', 'R770')
+SPECTRAL_INDEX = spectral_index
 
 # read the 9 index-images (either original or the thresholded)img
 def read_single_image(spectral_index, data_type, file_type):
-
     if file_type == 'dump':
         print('dump')
     elif file_type == 'npy':
@@ -19,27 +19,19 @@ def read_single_image(spectral_index, data_type, file_type):
 
 # read all images into one npy array. works with png, not work with npy
 def read_images(data_type, file_type):
-    imgs =[]
-    for i in spectral_index:
-        if file_type == 'dump':
-            print('dump file')
-        elif file_type == 'npy':
-            img = np.load(path + '/' + spectral_index + '_' + data_type + '.' + file_type, allow_pickle=False)
-            imgs.concatenate[img]
-        elif file_type == 'png':
-            img = cv.imread(path + '/' + i + '_' + data_type + '.' + file_type, cv.IMREAD_GRAYSCALE)
-            imgs.append(img)
-
+    imgs = []
+    for indx in SPECTRAL_INDEX:
+        img = read_single_image(spectral_index=indx, data_type=data_type, file_type=file_type)
+        imgs.append(img)
+        # if file_type == 'dump':
+        #     print('dump file')
+        # elif file_type == 'npy':
+        #     img = np.load(path + '/' + spectral_index + '_' + data_type + '.' + file_type, allow_pickle=False)
+        #     imgs.concatenate[img]
+        # elif file_type == 'png':
+        #     img = cv.imread(path + '/' + i + '_' + data_type + '.' + file_type, cv.IMREAD_GRAYSCALE)
+        #     imgs.append(img)
     return (imgs)
-
-
-
-
-
-
-
-
-
 
 def array_to_series(lbl,arr):
     vec = arr.flatten()
