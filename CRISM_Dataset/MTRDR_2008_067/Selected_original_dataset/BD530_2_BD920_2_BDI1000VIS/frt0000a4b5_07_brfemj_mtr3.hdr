@@ -1,0 +1,21 @@
+ENVI
+description = {
+  ENVI File, Created [Mon Dec 14 18:19:19 2015]}
+samples = 939
+lines   = 991
+bands   = 3
+header offset = 0
+file type = ENVI Standard
+data type = 1
+interleave = bsq
+sensor type = Unknown
+byte order = 0
+map info = {MRO Mars Equirectangular [IAU 2000] [20.00N; 0.00E], 1.0000, 1.0000, 4137056.8000, 1255124.5000, 1.8000000000e+01, 1.8000000000e+01, D_Mars_2000_IAU_IAG_custom_sphere_lat20, units=Meters}
+projection info = {17, 3393833.3, 20.000000, 0.000000, 0.0, 0.0, D_Mars_2000_IAU_IAG_custom_sphere_lat20, MRO Mars Equirectangular [IAU 2000] [20.00N; 0.00E], units=Meters}
+coordinate system string = {PROJCS["MRO Mars Equirectangular [IAU 2000] [20.00N; 0.00E]",GEOGCS["GCS_Mars_2000_IAU_IAG_custom_sphere_lat20",DATUM["D_Mars_2000_IAU_IAG_custom_sphere_lat20",SPHEROID["Mars_2000_IAU_IAG_custom_sphere_lat20",3393833.260758386,0.0]],PRIMEM["Reference_Meridian",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Equidistant_Cylindrical"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",0.0],PARAMETER["Standard_Parallel_1",20.0],UNIT["Meter",1.0]]}
+default bands = {1,2,3}
+wavelength units = Unknown
+data ignore value = 255
+default stretch = 0.000000 255.000000 linear
+band names = {
+ BD530_2, SH600_2, BDI1000VIS}
