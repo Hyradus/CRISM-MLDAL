@@ -6,11 +6,14 @@ CRISM MTRDR Spectral Index Extractor
 
 """
 import os
-import sys
 import rasterio as rio
 from spectral import envi
 import numpy as np
 import cv2 as cv
+import shutil
+from tkinter import filedialog
+from tkinter import Tk
+
 
 
 ######### Create dictionary with Spectral Indexes and NaN values (SpIndx) ####
@@ -96,16 +99,6 @@ def main(workdir, thresh, dirout):
 
 
 
-# ######### SETTING DIRECTORIES #########
-#
-# WORKDIR = r'D:\TEMP\CRISM_Selected_Datasets\2008_067\Selected'
-# SAVEPATH = r'D:\TEMP\CRISM_Selected_Datasets\2008_067' + '/processed/'
-#
-#
-# ######### SETTING VARIABLES #########
-#
-# THR = 10
-#
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
@@ -120,17 +113,23 @@ if __name__ == "__main__":
 
     WORKDIR = args.wdir
     if not os.path.exists(WORKDIR):
-        print("{} does not exist. Ciao.".format(WORKDIR))
-        sys.exit()
+        #print("{} does not exist. Ciao.".format(WORKDIR))
+        root = Tk()
+        root.withdraw()
+        WORKDIR = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title="Please select the working folder:")
+        print('Working folder:', WORKDIR)
+
 
     SAVEPATH = args.odir
     if not os.path.exists(SAVEPATH):
-        os.mkdir(SAVEPATH)
-        print("Directory ", SAVEPATH, " Created ")
+        SAVEPATH = WORKDIR +'/processed/'
+        if not os.path.exists(SAVEPATH):
+            shutil.rmtree(SAVEPATH)
+            os.mkdir(SAVEPATH)
+            print("Directory ", SAVEPATH, " Created ")
     else:
         print("Directory ", SAVEPATH, " already exists")
 
-    # Check if SAVEPATH exist, if not create it
     THR = args.thresh
 
     main(WORKDIR, THR, SAVEPATH)
