@@ -3,46 +3,38 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 path= r'D:\TEMP\CRISM_Selected_Datasets\2008_067\processed'
-spectral_index = ('OLINDEX3', 'LCPINDEX2', 'HCPINDEX2', 'BD2100_2', 'BD1900_2', 'BDI1000VIS', 'D2300', 'SINDEX2', 'R770')
-SPECTRAL_INDEX = spectral_index
+SPECTRAL_INDEX = ('OLINDEX3', 'LCPINDEX2', 'HCPINDEX2', 'BD2100_2', 'BD1900_2', 'BDI1000VIS', 'D2300', 'SINDEX2', 'R770')
+data_type = 'Thresholded'
+file_type = 'npy'
 
 # read the 9 index-images (either original or the thresholded)img
-def read_single_image(spectral_index, data_type, file_type):
+def read_single_image(SPECTRAL_INDEX, data_type, file_type):
     if file_type == 'dump':
         print('dump')
     elif file_type == 'npy':
-        img = np.load(path + '/' + spectral_index + '_' + data_type + '.' + file_type, allow_pickle=False)
+        img = np.load(path + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type, allow_pickle=False)
     elif file_type == 'png':
-        img = cv.imread(path + '/' + spectral_index + '_' + data_type + '.' + file_type)
+        img = cv.imread(path + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type)
     plt.imshow(img)
     return (img)
 
-# read all images into one npy array. works with png, not work with npy
 def read_images(data_type, file_type):
     imgs = []
     for indx in SPECTRAL_INDEX:
-        img = read_single_image(spectral_index=indx, data_type=data_type, file_type=file_type)
+        img = read_single_image(SPECTRAL_INDEX=indx, data_type=data_type, file_type=file_type)
         imgs.append(img)
-        # if file_type == 'dump':
-        #     print('dump file')
-        # elif file_type == 'npy':
-        #     img = np.load(path + '/' + spectral_index + '_' + data_type + '.' + file_type, allow_pickle=False)
-        #     imgs.concatenate[img]
-        # elif file_type == 'png':
-        #     img = cv.imread(path + '/' + i + '_' + data_type + '.' + file_type, cv.IMREAD_GRAYSCALE)
-        #     imgs.append(img)
     return (imgs)
 
-def array_to_series(lbl,arr):
-    vec = arr.flatten()
-    ser = pandas.Series(data=vec,name=lbl)
+def array_to_series(SPECTRAL_INDEX,imgs):
+    vec = imgs.flatten()
+    ser = pandas.Series(data=vec,name=SPECTRAL_INDEX)
 
 def merge_series_to_df(df,ser):
     assert df is not None
     df[ser.name] = ser
     return df
 
-def X(directory=""):
+def X(data_type, file_type, directory=""):
     image_arrays = read_images()
     df = pandas.DataFrame()
     for image_array in image_arrays:
