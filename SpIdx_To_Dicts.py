@@ -57,7 +57,7 @@ def ori_img(IMAGE, i, IDX):
     _filename = os.path.join(SAVEPATH, savename)
     cv.imwrite(_filename+'.png', im.astype('uint8'))
     im.dump(_filename)
-    
+
     return(im)
 
 def thr_img(IMAGE, i, IDX, BANDor, THR):
@@ -71,15 +71,15 @@ def thr_img(IMAGE, i, IDX, BANDor, THR):
     _filename = os.path.join(SAVEPATH, savename)
     cv.imwrite(_filename+'.png', BANDth.astype('uint8'))
     np.save(_filename, BANDth)
-    
+
     return(BANDth)
-    
+
 def bol_img(IMAGE, i, IDX, BANDth):
     bol = np.isfinite(BANDth)
-    savename = IDX[i][0] + '_Thresholded' + '_bol'
+    savename = IDX[i][0] + '_Thresholded_bool'
     _filename = os.path.join(SAVEPATH, savename)
     np.save(_filename, bol)
-    
+
     return(bol)
 
 def img(filepath, subdir, files):
