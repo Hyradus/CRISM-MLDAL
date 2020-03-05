@@ -2,20 +2,31 @@ import pandas
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
-path= r'D:\TEMP\CRISM_Selected_Datasets\2008_067\processed'
+from tkinter import Tk,filedialog
+import os
+
+root = Tk()
+root.withdraw()
+PATH = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title="Please select the working folder:")
+print('Working folder:', PATH)
+        
 SPECTRAL_INDEX = ('OLINDEX3', 'LCPINDEX2', 'HCPINDEX2', 'BD2100_2', 'BD1900_2', 'BDI1000VIS', 'D2300', 'SINDEX2', 'R770')
+
+global data_type
+global file_type
+global imgs
 data_type = 'Thresholded'
 file_type = 'npy'
 
-# read the 9 index-images (either original or the thresholded)img
+# read the 9 index-images (either original or the thresholde)
 def read_single_image(SPECTRAL_INDEX, data_type, file_type):
     if file_type == 'dump':
         print('dump')
     elif file_type == 'npy':
-        img = np.load(path + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type, allow_pickle=False)
+        img = np.load(PATH + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type, allow_pickle=False)
     elif file_type == 'png':
-        img = cv.imread(path + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type)
-    plt.imshow(img)
+        img = cv.imread(PATH + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type)
+    #plt.imshow(img)
     return (img)
 
 def read_images(data_type, file_type):
@@ -25,20 +36,24 @@ def read_images(data_type, file_type):
         imgs.append(img)
     return (imgs)
 
-def array_to_series(SPECTRAL_INDEX,imgs):
-    vec = imgs.flatten()
+
+def array_to_series(image_arrays):
+    vec = image_arrays.flatten()
+    print(vec)
     ser = pandas.Series(data=vec,name=SPECTRAL_INDEX)
+    return(vec)
 
 def merge_series_to_df(df,ser):
     assert df is not None
     df[ser.name] = ser
     return df
 
-def X(data_type, file_type, directory=""):
-    image_arrays = read_images()
+def X(directory=PATH):
+    image_arrays = read_images(data_type, file_type)
     df = pandas.DataFrame()
-    for image_array in image_arrays:
-        ser = array_to_series(image_array)
+    for image_arrays in image_arrays:
+        ser = array_to_series(image_arrays)
+        print(ser)
         assert len(ser) == len(df)
         df = merge_series_to_df(df,ser)
 
@@ -60,6 +75,6 @@ for mineral in list_minerals:
     assert len(dfY) == len(dfX)
     dfY.to_csv(mineral.csv)
 
-    imm = cv.imread(path + '/HCPINDEX2_thresholded.png')
+    imm = cv.imread(PATH + '/HCPINDEX2_thresholded.png')
     cv.imshow('image', imm)
     cv.waitKey(0)
