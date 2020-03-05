@@ -13,42 +13,46 @@ import cv2 as cv
 import shutil
 from tkinter import filedialog
 from tkinter import Tk
-
+import csv
 
 ######### Create dictionary with Spectral Indexes and NaN values (SpIndx) ####
 
-SPIDX = {'OLINDEX3' : [255, 255],
-         'LCPINDEX2' : [255, 255],
-         'HCPINDEX2' : [255, 255],
-         'BD2100_2' : [255, 255],
-         'BD1900_2' : [255, 255],
-         'BDI1000VIS' : [255, 255],
-         'D2300' : [255, 255],
-         'SINDEX2' : [255, 255],
-         'R770' : [255, 255],
-         }
 
-SPIDXOR = {'OLINDEX3' : [255, 255],
-           'LCPINDEX2' : [255, 255],
-           'HCPINDEX2' : [255, 255],
-           'BD2100_2' : [255, 255],
-           'BD1900_2' : [255, 255],
-           'BDI1000VIS' : [255, 255],
-           'D2300' : [255, 255],
-           'SINDEX2' : [255, 255],
-           'R770' : [255, 255],
-           }
 
-SPIDXBOL = {'OLINDEX3' : [255, 255],
-            'LCPINDEX2' : [255, 255],
-            'HCPINDEX2' : [255, 255],
-            'BD2100_2' : [255, 255],
-            'BD1900_2' : [255, 255],
-            'BDI1000VIS' : [255, 255],
-            'D2300' : [255, 255],
-            'SINDEX2' : [255, 255],
-            'R770' : [255, 255],
-            }
+# =============================================================================
+# SPIDX = {'OLINDEX3' : [255, 255],
+#          'LCPINDEX2' : [255, 255],
+#          'HCPINDEX2' : [255, 255],
+#          'BD2100_2' : [255, 255],
+#          'BD1900_2' : [255, 255],
+#          'BDI1000VIS' : [255, 255],
+#          'D2300' : [255, 255],
+#          'SINDEX2' : [255, 255],
+#          'R770' : [255, 255],
+#          }
+#
+# SPIDXOR = {'OLINDEX3' : [255, 255],
+#            'LCPINDEX2' : [255, 255],
+#            'HCPINDEX2' : [255, 255],
+#            'BD2100_2' : [255, 255],
+#            'BD1900_2' : [255, 255],
+#            'BDI1000VIS' : [255, 255],
+#            'D2300' : [255, 255],
+#            'SINDEX2' : [255, 255],
+#            'R770' : [255, 255],
+#            }
+#
+# SPIDXBOL = {'OLINDEX3' : [255, 255],
+#             'LCPINDEX2' : [255, 255],
+#             'HCPINDEX2' : [255, 255],
+#             'BD2100_2' : [255, 255],
+#             'BD1900_2' : [255, 255],
+#             'BDI1000VIS' : [255, 255],
+#             'D2300' : [255, 255],
+#             'SINDEX2' : [255, 255],
+#             'R770' : [255, 255],
+#             }
+# =============================================================================
 
 
 def ori_img(IMAGE, i, IDX):
@@ -152,6 +156,17 @@ if __name__ == "__main__":
     else:
         print("Directory ", SAVEPATH, " already exists")
 
+
+
+    cfg = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Please select spectral configuration file:", filetypes= (('csv files', '*.csv'), ('all files', '*.*)))')))
+    print('Spectral configuration file selected:', cfg)
+    with open(cfg, newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+
+    SPIDX = { data[i][0] : [255, 255] for i in range(0, len(data) ) }
+    SPIDXOR = { data[i][0] : [255, 255] for i in range(0, len(data) ) }
+    SPIDXBOL = { data[i][0] : [255, 255] for i in range(0, len(data) ) }
     THR = args.thresh
 
     main(WORKDIR, THR, SAVEPATH)
