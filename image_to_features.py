@@ -57,10 +57,6 @@ def X(PATH):
         df = merge_series_to_df(df,ser)
     return(df)
 
-
-def define_class_array(index_array):
-    return index_array.astype(bool)
-
 def Y(mineral_name, index_filename):
     index_array = read_single_image(SPECTRAL_INDEX=index_filename, file_type=file_type, data_type='Thresholded_bool')
     #arr = define_class_array(index_array)
@@ -70,7 +66,6 @@ def Y(mineral_name, index_filename):
 dfX = X(PATH)
 savepath = PATH+'/features/'
 dfX.to_csv(os.path.join(savepath,'index_features'))
-
 
 for i in range(len(MINERAL_LIST)):
     dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i])
