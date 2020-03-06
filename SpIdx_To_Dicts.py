@@ -14,46 +14,7 @@ import shutil
 from tkinter import filedialog
 from tkinter import Tk
 import csv
-
-######### Create dictionary with Spectral Indexes and NaN values (SpIndx) ####
-
-
-
-# =============================================================================
-# SPIDX = {'OLINDEX3' : [255, 255],
-#          'LCPINDEX2' : [255, 255],
-#          'HCPINDEX2' : [255, 255],
-#          'BD2100_2' : [255, 255],
-#          'BD1900_2' : [255, 255],
-#          'BDI1000VIS' : [255, 255],
-#          'D2300' : [255, 255],
-#          'SINDEX2' : [255, 255],
-#          'R770' : [255, 255],
-#          }
-#
-# SPIDXOR = {'OLINDEX3' : [255, 255],
-#            'LCPINDEX2' : [255, 255],
-#            'HCPINDEX2' : [255, 255],
-#            'BD2100_2' : [255, 255],
-#            'BD1900_2' : [255, 255],
-#            'BDI1000VIS' : [255, 255],
-#            'D2300' : [255, 255],
-#            'SINDEX2' : [255, 255],
-#            'R770' : [255, 255],
-#            }
-#
-# SPIDXBOL = {'OLINDEX3' : [255, 255],
-#             'LCPINDEX2' : [255, 255],
-#             'HCPINDEX2' : [255, 255],
-#             'BD2100_2' : [255, 255],
-#             'BD1900_2' : [255, 255],
-#             'BDI1000VIS' : [255, 255],
-#             'D2300' : [255, 255],
-#             'SINDEX2' : [255, 255],
-#             'R770' : [255, 255],
-#             }
-# =============================================================================
-
+from argparse import ArgumentParser
 
 def ori_img(IMAGE, i, IDX):
     im = IMAGE.read(i+1, masked=True).astype('float64')
@@ -122,8 +83,7 @@ def main(workdir, thresh, dirout):
                 img(filepath, subdir, files)
 
 if __name__ == "__main__":
-    from argparse import ArgumentParser
-
+# Parsing arguments from cli
     parser = ArgumentParser()
     parser.add_argument('--wdir', default='data',
                         help='Dir where data (source) is.')
@@ -132,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument('--thresh', default=10, type=float,
                         help='Threshold () to apply')
     args = parser.parse_args()
-
+# or asking for directories
     WORKDIR = args.wdir
     if not os.path.exists(WORKDIR):
         #print("{} does not exist. Ciao.".format(WORKDIR))
@@ -140,7 +100,6 @@ if __name__ == "__main__":
         root.withdraw()
         WORKDIR = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title="Please select the working folder:")
         print('Working folder:', WORKDIR)
-
 
     SAVEPATH = args.odir
     if not os.path.exists(SAVEPATH):
@@ -156,17 +115,17 @@ if __name__ == "__main__":
     else:
         print("Directory ", SAVEPATH, " already exists")
 
-
-
+# reading config file for minerals
     cfg = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Please select spectral configuration file:", filetypes= (('csv files', '*.csv'), ('all files', '*.*)))')))
     print('Spectral configuration file selected:', cfg)
     with open(cfg, newline='') as f:
         reader = csv.reader(f)
         data = list(reader)
 
+# creating dictionaries
     SPIDX = { data[i][0] : [255, 255] for i in range(0, len(data) ) }
     SPIDXOR = { data[i][0] : [255, 255] for i in range(0, len(data) ) }
     SPIDXBOL = { data[i][0] : [255, 255] for i in range(0, len(data) ) }
-    THR = args.thresh
 
+    THR = args.thresh
     main(WORKDIR, THR, SAVEPATH)

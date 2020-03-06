@@ -11,12 +11,12 @@ root.withdraw()
 PATH = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title="Please select the working folder:")
 print('Working folder:', PATH)
 
-with open('G:\Il mio Drive\BREMEN_PHD\Python_scripts\CRISM_ML_Data_Analysis_Tool/SpIndex_Minerals.csv', newline='') as f:
+# reading config file for minerals
+cfg = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Please select spectral configuration file:", filetypes= (('csv files', '*.csv'), ('all files', '*.*)))')))
+print('Spectral configuration file selected:', cfg)
+with open(cfg, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
-#print(data)
-
-#SPECTRAL_INDEX2 = ('OLINDEX3', 'LCPINDEX2', 'HCPINDEX2', 'BD2100_2', 'BD1900_2', 'BDI1000VIS', 'D2300', 'SINDEX2', 'R770')
 
 SPECTRAL_INDEX, MINERAL_LIST = zip(*data)
 
@@ -28,13 +28,13 @@ global imgs
 file_type = 'npy'
 
 # read the 9 index-images (either original or the thresholde)
-def read_single_image(SPECTRAL_INDEX, data_type, file_type, i):
+def read_single_image(SPECTRAL_INDEX, file_type,data_type):
     if file_type == 'dump':
         print('dump')
     elif file_type == 'npy':
-        img = np.load(PATH + '/' + SPECTRAL_INDEX[i] + '_' + data_type + '.' + file_type, allow_pickle=False)
+        img = np.load(PATH + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type, allow_pickle=False)
     elif file_type == 'png':
-        img = cv.imread(PATH + '/' + SPECTRAL_INDEX[i] + '_' + data_type + '.' + file_type)
+        img = cv.imread(PATH + '/' + SPECTRAL_INDEX + '_' + data_type + '.' + file_type)
     #plt.imshow(img)
     return (img)
 
@@ -50,38 +50,30 @@ def merge_series_to_df(df,ser):
 
 def X(PATH):
     df = pandas.DataFrame()
-    for index in SPECTRAL_INDEX:
-        img = read_single_image(file_type, SPECTRAL_INDEX, data_type='Thresholded')
+    for i in range(len(SPECTRAL_INDEX)):
+        img = read_single_image(SPECTRAL_INDEX[i], file_type, data_type='Thresholded')
         ser = array_to_series(img, i)
         #assert len(ser) == len(df)
         df = merge_series_to_df(df,ser)
     return(df)
 
 
-
-
 def define_class_array(index_array):
     return index_array.astype(bool)
 
 def Y(mineral_name, index_filename):
-    index_array = read_single_image(SPECTRAL_INDEX,  file_type, data_type='Thresholded_bool')
+    index_array = read_single_image(SPECTRAL_INDEX=index_filename, file_type=file_type, data_type='Thresholded_bool')
     #arr = define_class_array(index_array)
-    ser = array_to_series(mineral_name, index_array)
+    ser = array_to_series(img=index_array, i=SPECTRAL_INDEX.index(index_filename))
     return (ser)
 
-# =============================================================================
-# def Y(mineral_name, index_filename=""):
-#     #we know there is direct map from index to mineral
-#     image_array_index = read_images(image_type="bol")
-#     arr = define_class_array(image_array_index)
-#     ser = array_to_series(mineral_name, arr)
-#     return ser
-# =============================================================================
-
 dfX = X(PATH)
-dfX.to_csv("index_features-csv")
+savepath = PATH+'/features/'
+dfX.to_csv(os.path.join(savepath,'index_features'))
+
 
 for i in range(len(MINERAL_LIST)):
-    dfY = Y(MINERAL_LIST[i], SPECTRAL_INDEX[i])
+    dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i])
     #assert len(dfY) == len(dfX)
-    dfY.to_csv(mineral.csv)
+    mineral=MINERAL_LIST[i]
+    dfY.to_csv(os.path.join(savepath, mineral))
