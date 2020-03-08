@@ -1,6 +1,5 @@
 import pandas
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2 as cv
 from tkinter import Tk,filedialog
 import os
@@ -71,4 +70,4 @@ for i in range(len(MINERAL_LIST)):
     dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i])
     #assert len(dfY) == len(dfX)
     mineral=MINERAL_LIST[i]
-    dfY.to_csv(os.path.join(savepath, mineral))
+    dfY.to_csv(os.path.join(savepath, mineral.strip( )))
