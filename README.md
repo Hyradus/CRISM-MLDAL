@@ -53,8 +53,20 @@ To install it, just clone the repository and double check the prerequisites.
 In the repository there is an example dataset into the folder "CRISM_dataset" with both extracted data (processed folder) and features data (into features sub-folder)
 
 To test the script, just delete every file inside inside the processed and features folder, then run SpIdx_to_Dicts.py using --argparser or using the filedialog (if no --arguments are passed) and select the Selected_original_dataset folder as a working folder and SpIndex_Minerals.csv as configuration file (root folder).
-
 Then run image_to_features.py double check that a "features" folder is present inside the processed foldeer and select the processed folder and the same SpIndex_Minerals.csv. 
+
+## Executing
+
+1) Edit SpIndex_Minerals.csv and add/delete the Spectral indexes and relative Minerals.
+2) Use SpIdx_to_Dicts.py to generate all extracted files.
+    Simply run the script and browse in the popup window to the *root* folders where all *.imgs and *.hdr*.
+    In the next popup dialog select the SpIndex_Minerals.csv file.
+    Default threshold is set to 10.
+3) Use image_to_features.py to generate the spectral index dataframe in csv format and boolean csv files for each band.
+    Run the script and browse in the popup window to the *processed* folder located in the previously selected *root* folder.
+    Default selected datasets are:
+        - data_type = Thresholded
+        - file_type = npy
 
 ## Authors
 
