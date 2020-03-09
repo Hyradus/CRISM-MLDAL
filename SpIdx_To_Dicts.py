@@ -107,10 +107,14 @@ if __name__ == "__main__":
         if not os.path.exists(SAVEPATH):
             #shutil.rmtree(SAVEPATH)
             os.mkdir(SAVEPATH)
+            PROCPATH = WORKDIR + '/processed/features/'
+            os.mkdir(PROCPATH)
             print("Directory ", SAVEPATH, " Created ")
         else:
             shutil.rmtree(SAVEPATH)
             os.mkdir(SAVEPATH)
+            PROCPATH = WORKDIR + '/processed/features/'
+            os.mkdir(PROCPATH)
             print("Directory ", SAVEPATH, " Created ")
     else:
         print("Directory ", SAVEPATH, " already exists")
