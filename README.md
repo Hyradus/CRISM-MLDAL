@@ -1,4 +1,4 @@
-# CRISM_ML_Data_Analysis_Tool
+# CRISM-MLDAL - Machine Learning Data Analysis Tool
 
 Scripts to read, extract, assemble features and mineral classes to train a ML.
 
