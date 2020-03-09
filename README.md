@@ -64,5 +64,5 @@ Then run image_to_features.py double check that a "features" folder is present i
 
 ## License
 
-TBD
+GNU General Public License v3.0
 
