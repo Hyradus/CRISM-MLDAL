@@ -17,7 +17,7 @@ with open(cfg, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
-SPECTRAL_INDEX, MINERAL_LIST = zip(*data)
+SPECTRAL_INDEX, MINERAL_LIST = map(list,zip(*data))
 
 
 #global data_type
@@ -71,5 +71,5 @@ dfX.to_csv(fename, index=False)
 for i in range(len(MINERAL_LIST)):
     dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i],)
     #assert len(dfY) == len(dfX)
-    mineral=MINERAL_LIST[i]
+    mineral=MINERAL_LIST[i] + '.csv'
     dfY.to_csv(os.path.join(savepath, mineral.strip( )), index=False)
