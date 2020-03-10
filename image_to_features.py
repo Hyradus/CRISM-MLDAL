@@ -63,11 +63,13 @@ def Y(mineral_name, index_filename):
     return (ser)
 
 dfX = X(PATH)
-savepath = PATH+'/features/'
-dfX.to_csv(os.path.join(savepath,'index_features'))
+
+savepath = os.path.join(PATH + '/features/')
+fename = os.path.join(savepath + 'index_features.csv')
+dfX.to_csv(fename, index=False)
 
 for i in range(len(MINERAL_LIST)):
-    dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i])
+    dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i],)
     #assert len(dfY) == len(dfX)
     mineral=MINERAL_LIST[i]
-    dfY.to_csv(os.path.join(savepath, mineral.strip( )))
+    dfY.to_csv(os.path.join(savepath, mineral.strip( )), index=False)
