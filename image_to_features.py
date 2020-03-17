@@ -68,8 +68,20 @@ savepath = os.path.join(PATH + '/features/')
 fename = os.path.join(savepath + 'index_features.csv')
 dfX.to_csv(fename, index=False)
 
+DfY = pandas.DataFrame()
 for i in range(len(MINERAL_LIST)):
     dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i],)
     #assert len(dfY) == len(dfX)
     mineral=MINERAL_LIST[i] + '.csv'
     dfY.to_csv(os.path.join(savepath, mineral.strip( )), index=False)
+
+
+# DfY = pandas.DataFrame()
+# for i in range(len(MINERAL_LIST)):
+#     dfY = Y(mineral_name=MINERAL_LIST[i], index_filename=SPECTRAL_INDEX[i],)
+#     #assert len(dfY) == len(dfX)
+#     DfY = DfY.append(dfY)
+
+savepath = os.path.join(PATH + '/features/')
+fename = os.path.join(savepath + 'index_classes.csv')
+DfY.to_csv(fename, index=False)
