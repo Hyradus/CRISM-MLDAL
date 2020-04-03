@@ -15,7 +15,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-MODEL = 'forest'
+MODEL = 'tree'
 
 root = Tk()
 root.withdraw()
@@ -93,11 +93,11 @@ def pred(X_train, Y_train, MODEL):
     Y_pred_test = MODEL.predict(X_test)
     return(Y_pred_train, Y_pred_test)
 
-def check(Y_train, Y_pred_train, Y_test, Y_pred):
+def check(Y_train, Y_pred_train, Y_test, Y_pred_test):
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import log_loss
     accuracy_train = accuracy_score(Y_train, Y_pred_train)
-    accuracy_test = accuracy_score(Y_test, Y_pred)
+    accuracy_test = accuracy_score(Y_test, Y_pred_test)
     return(accuracy_train, accuracy_test)
 
 
@@ -127,7 +127,7 @@ elif MODEL == 'forest':
 
 Y_pred_train = mod.predict(X_train)
 Y_pred_test = mod.predict(X_test)
-accuracy_train = accuracy_score(Y_train, Y_pred_train)
-accuracy_test = accuracy_score(Y_test, Y_pred_test)
-print("ACCURACY FOR MODEL", MODEL,": TRAIN=%.4f TEST=%.4f" % (accuracy_train,accuracy_test))
+scores = check(Y_train, Y_pred_train, Y_test, Y_pred_test)
+print("ACCURACY FOR MODEL", MODEL,": TRAIN=%.8f TEST=%.8f" % (scores[0], scores[1]))
+
 
