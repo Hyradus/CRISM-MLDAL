@@ -1,0 +1,24 @@
+ENVI
+description = {
+  ENVI File, Created [Fri Jun 12 00:31:47 2015]}
+samples = 784
+lines   = 724
+bands   = 3
+header offset = 0
+file type = ENVI Standard
+data type = 1
+interleave = bsq
+sensor type = Unknown
+byte order = 0
+map info = {MRO Mars Equirectangular [IAU 2000] [10.00N; 0.00E], 1.0000, 1.0000, 1412431.6000, 628180.9700, 1.8000000000e+01, 1.8000000000e+01, D_Mars_2000_IAU_IAG_custom_sphere_lat10, units=Meters}
+projection info = {17, 3395582.0, 10.000000, 0.000000, 0.0, 0.0, D_Mars_2000_IAU_IAG_custom_sphere_lat10, MRO Mars Equirectangular [IAU 2000] [10.00N; 0.00E], units=Meters}
+coordinate system string = {PROJCS["MRO Mars Equirectangular [IAU 2000] [10.00N; 0.00E]",GEOGCS["GCS_Mars_2000_IAU_IAG_custom_sphere_lat10",DATUM["D_Mars_2000_IAU_IAG_custom_sphere_lat10",SPHEROID["Mars_2000_IAU_IAG_custom_sphere_lat10",3395582.027080459,0.0]],PRIMEM["Reference_Meridian",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Equidistant_Cylindrical"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",0.0],PARAMETER["Standard_Parallel_1",10.0],UNIT["Meter",1.0]]}
+default bands = {1,2,3}
+sun azimuth = -1.00000000
+sun elevation = -1.00000000
+cloud cover = -1.00000000
+wavelength units = Unknown
+data ignore value = 255
+default stretch = 0.000000 255.000000 linear
+band names = {
+ R2529, R1330, R770}
