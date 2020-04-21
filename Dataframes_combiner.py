@@ -23,14 +23,15 @@ def MergeReadCsv():
     #combine all files in the list
     CombData = pd.concat([pd.read_csv(f) for f in all_filenames ], ignore_index=True)
     #export to csv
-    savefolder = "combined"
+    ln = len(all_filenames)
+    savefolder = "combined_"+str(ln)+'_classes'
     if os.path.exists(savefolder):
         shutil.rmtree(savefolder)
         os.mkdir(savefolder)
     else:
         os.chdir(PATH)
         os.mkdir(savefolder)
-    CombData.to_csv(savefolder+"/features_combined.csv", encoding='utf-8-sig',index = False)
+    CombData.to_csv(savefolder+'/'+str(ln)+'_classes_combined.csv', encoding='utf-8-sig',index = False)
     # CombData = pd.read_csv(savefolder+"/combined_csv.csv",
     #                             parse_dates=['data'],
     #                             index_col=['data'])
