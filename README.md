@@ -1,6 +1,11 @@
-# CRISM-MLDAL - Machine Learning Data Analysis Tool
+# WIP - CRISM-MLDAL - Machine Learning Data Analysis Tool
 
-Scripts to read, extract, assemble features and mineral classes to train a ML.
+Scripts to:
+- read CRISM MTRDR images,
+- extract spectral indexes (bands),
+- extract features and classes,
+- train the assemble features and mineral classes
+- compare trained models predictions
 
 ## Brief description.
 
