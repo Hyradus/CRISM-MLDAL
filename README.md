@@ -17,15 +17,15 @@ Downloaded images consist of different files, the most important are the *.img (
 
 This repository is composed by:
 
-- a simple configuration file in csv format (SpIndex_Minerals.csv), in which there are two columns, Spectral bands (1st) and Relative mineral (2nd).
-
-- SpIdx_To_Dicts.py: a script that iterate over all files of a user-specified folder and look for every spectral band specified into the configuration file and:
-    1) Extract the original data and store it into a dump file and a *.png;
-    2) Apply a mask for NaN values, apply a user defined threshold (default is 10) and store into a *.npy array and a *.png;
-    3) Convert the masked, tresholded image into a boolean image and store into a *.npy array and a *.png.
-    
-- image_to_features.py: a script that read files exported with SpIdx_to_Dicts.py, converts them into a series and create a csv pandas dataframe and a boolean csv for each relative mineral specified in the configuration file.
-In the pandas dataframe columns are spectral indexes (e.g. OLINDEX3) and rows are the pixels of the image with relative DN values.
+- Conditioned ML: containing script to train and predict models on the same dataset (only for testing purposes and to get a bit familiar with ML)
+- Tools:
+    - MTRDR containing scripts to:
+        - convert CRISM hypercube to numpy 3D array and save it in hdf file
+        - filter and combine MTRDR and Summary Products hdf files
+    - Summary Products containing scripts to:
+        - Extract unique bands (indexes) from Summary Products datasets into multiple filetypes
+        - Create original and boolean files of user selected bands(indexes) in hdf file format
+       
 
 ## Getting Started
 
@@ -52,9 +52,9 @@ conda install -c conda-forge
 
 To install it, just clone the repository and double check the prerequisites.
 
-## WIP - Workflow detailed description 
+# Conditioned ML Workflow detailed description 
 
-# Data organization
+## Data organization
 
 Datasets download from Mars Orbital Data Explorer should be extracted into separated folders, named as the dataset and that contain all files.
 
@@ -66,7 +66,7 @@ Using the various scripts, different sub-folders will be created automatically
         - Bandname_models folder for each band processed that contains DecisionTree and RandomForest models plus some evaluation datas
 
 
-# Multiple_Band_extractor
+## Multiple_Band_extractor
 
 Given a dataset folder it reads all the img files and their associated hdr file that are necessary to read correctly the BAND_NAME of the img.
 
@@ -80,7 +80,7 @@ Then original images are saved into a sub-folder called "Extracted" as:
 - In addition a csv file, containing all the unique band names in a single column is generated.
 
 
-# Features-Target_creator
+## Features-Target_creator
 
 Users must select:
 - the "Extracted" folder
@@ -91,7 +91,7 @@ Users must select:
 - dataset-name_features: a csv file containing all the selected bands and the respective values in columns
 dataset-name_classes: a csv file containing all the selected bands and the respective boolean values in columns. 
 
-# ML_Multiple-single_class_trainer
+## ML_Multiple-single_class_trainer
 
 Users must select:
 
@@ -111,7 +111,7 @@ The script will then:
     - tree graph for Decision Trees
 
 
-# Multi-model_single-target_predictor
+## Multi-model_single-target_predictor
 
 Users must select:
 - the folder where are located the files (pkl) of model pairs (Decision Trees and Random Forest). Minimum 1 pair, maximum to be tested (i have tried up to 5 model)
@@ -120,6 +120,17 @@ Users must select:
 The script will then:
 - compute predictions for each given model
 - generate combined graph showing the results of the prediction
+
+# WIP - ML on hyperspectral cubes
+_________________________________________________________________________________________________________________________
+
+## ML_single_class_full_bands_combined_df
+Read a combined MTRDR + index dataframes and train models:
+- Decision Trees
+- Random Forest
+
+## Multi-model_single-target_predictor
+Read trained models and predict a selected MTRDR
 
 
 _________________________________________________________________________________________________________________________
