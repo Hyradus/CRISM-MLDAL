@@ -65,7 +65,7 @@ def main(hdrfile):
     cube_np_nan, names = img2np(hdrfile)
     cube_df = CUBE_np2df(cube_np_nan, names)
     
-    print('Saving to csv')
+    #print('Saving to csv')
     #export cube to csv
     #csv_time = CUBE_df2csv(cube_df, hdrfile)
     print('Saving to hdf')

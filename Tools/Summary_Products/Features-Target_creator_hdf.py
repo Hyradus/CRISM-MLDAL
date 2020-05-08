@@ -68,16 +68,16 @@ def bool_df(PATH):
 
 def main(PATH, SPECTRAL_INDEX, savedir):
     
-    os.chdir(PATH+"/../..")
+    os.chdir(PATH+"/..")
     path = os.getcwd()
     prefix = os.path.basename(path)
     savepath = PATH +'/'+ savedir + '/'
     THR_DF = thr_df(PATH)  
     BOL_DF = bool_df(PATH)
-    feat_name = os.path.join(savepath + prefix + '_features.csv')
-    class_name = os.path.join(savepath + prefix + '_classes.csv')
-    THR_DF.to_csv(feat_name, index=False)
-    BOL_DF.to_csv(class_name, index=False)
+    feat_name = os.path.join(savepath + prefix + '_features.hdf')
+    class_name = os.path.join(savepath + prefix + '_classes.hdf')
+    THR_DF.to_hdf(feat_name, 'Thresholded_classes')
+    BOL_DF.to_hdf(class_name, 'Boolean_classes')
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -116,6 +116,8 @@ if __name__ == "__main__":
             for row in csv.reader(f):
                 SPECTRAL_INDEX.append(row[0])   
         
+        
+
     main(PATH, SPECTRAL_INDEX, savedir)
     
     # def Y(mineral_name, index_filename):
@@ -132,4 +134,5 @@ if __name__ == "__main__":
     #     dfY.to_csv(os.path.join(savepath, mineral.strip( )), index=False)
     #     ser = pandas.Series(data=dfY, name=SPECTRAL_INDEX[i])
     #     DfTarget = merge_series_to_df(DfTarget,ser)
+
     
