@@ -43,9 +43,9 @@ def pred2img(pred_array):
 
 def LinReg_train(X_train, Y_train, X_test, Y_test):
     from sklearn.linear_model import LinearRegression
-    linR = LinearRegression()
+    linR = LinearRegression(n_jobs=jobs)
     start = timer()
-    linR_model = linR.fit(X_train, Y_train, n_jobs=jobs)
+    linR_model = linR.fit(X_train, Y_train)
     end = timer()
     print('Trained in: ', end-start, 's')
     pred = linR.predict(X_test)
@@ -151,7 +151,8 @@ X = features_nonan.values
 Y = target.values
 
 #get cpu threads
-jobs=psutil.cpu_count(logical=True) -2
+#jobs=psutil.cpu_count(logical=False)
+jobs = 2
     
 #create train and test by splitting the dataset
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -170,13 +171,10 @@ save_models(linR_model, linname, savepath)
 #validation
 lin_scores = model_valid(linR_model, X_train, Y_train)
 
-
-
-
 #Logistic Regression
 logR_model, logR_prediction, logR_pred_proba, logR_self_img = LogReg(X_train, Y_train, self_mtrdr)
 logname = 'LinReg.pkl'
-save_models(logR_model, logname)
+save_models(logR_model, logname, savepath)
 log_scores = model_valid(logR_model, X_train, Y_train)
 
 
