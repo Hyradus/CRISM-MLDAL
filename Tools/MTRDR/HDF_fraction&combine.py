@@ -29,11 +29,7 @@ def combine(f):
         return_df = complete_df
     return(return_df)
 
-def subsample_df(df, fraction):
-    df = combine(f)
-    subset_df = df.sample(frac=fraction).sort_index(axis=0)
-    return(subset_df)
-    
+   
 def combinehdf(PATH, fraction):
     os.chdir(PATH)
     extension = 'hdr.hdf'
@@ -67,7 +63,7 @@ print('Working folder:', PATH)
 #select class index to combine e.g OLINDEX3
 index = 'OLINDEX3'
 #select fraction
-fraction = 0.05
+fraction = 1
 #drop nan rows?
 answer = False
 
