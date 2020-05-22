@@ -17,8 +17,8 @@ from tkinter import Tk,filedialog
 def combine(f):
     df = pd.read_hdf(f)
     name = f.split('_')
-    classname=name[0]+'_classes.hdf'
-    cla = pd.read_hdf(classname)
+    filename=name[0]+'_'+datatype + '.hdf'
+    cla = pd.read_hdf(filename)
     #remove nan rows or not
     if answer == True:        
         complete_df = pd.concat([df, cla[index]], axis=1, sort=False)
@@ -43,14 +43,14 @@ def combinehdf(PATH, fraction):
         
     #export to hdf
     ln = len(all_filenames)
-    savefolder = "combined_"+str(ln)+'_'+str(fraction)+'_dataframe'
+    savefolder = str(ln)+'_combined_DF_'+str(fraction*100)+ '%_' + str(datatype)
     if os.path.exists(savefolder):
         shutil.rmtree(savefolder)
         os.mkdir(savefolder)
     else:
         os.chdir(PATH)
         os.mkdir(savefolder)
-    savename = savefolder+'/'+str(ln)+'_'+str(fraction)+'_combined_dataframe.hdf'
+    savename = savefolder+'/'+str(ln)+'_combined_DF_'+str(fraction*100)+ '%_' + str(datatype)+'.hdf'
     CombData.to_hdf(savename, 'Combined')
     return(CombData)
 
@@ -61,7 +61,10 @@ print('Working folder:', PATH)
 
 
 #select class index to combine e.g OLINDEX3
-index = 'OLINDEX3'
+origin_type = 'original' #choose original or thresholded
+data_type = 'features' #choose classes or features
+datatype = origin_type +'_'+data_type
+index = 'OLINDEX3' 
 #select fraction
 fraction = 1
 #drop nan rows?

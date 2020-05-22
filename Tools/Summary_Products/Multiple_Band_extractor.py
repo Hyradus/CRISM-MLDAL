@@ -53,7 +53,8 @@ def ori_img(IMAGE, i, IDX, filename, savepath):
     savename = IDX[i][0] +'_original'
     savefile = os.path.join(savepath, savename)
     cv.imwrite(savefile+'.png', im.astype('uint8'))
-    im.dump(savefile)
+    dumpfile = savefile+'.dat'
+    im.dump(dumpfile)
     return(im)
 
 def thr_img(IMAGE, i, IDX, BANDor, THR, filename, savepath):
