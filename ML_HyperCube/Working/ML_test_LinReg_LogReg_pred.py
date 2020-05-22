@@ -41,8 +41,8 @@ def load_original_img():
     scaler = MinMaxScaler()
     scaler.fit(img_slice_fill)
     img_scaled = scaler.transform(img_slice_fill)
-    img_scaled_mask = np.ma.masked_where(img_scaled == 0, img_scaled, copy=True)
-    return(img_scaled_mask, img_slice, png)
+    img_scaled_mask = np.ma.masked_where(img_scaled == 0, img_scaled)
+    return(img_scaled, img_scaled_mask, img_slice, png)
 
 def hdf2df():
     hdf = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Please select select hdf file to load:", filetypes= (('hdf files', '*.hdf'), ('all files', '*.*)))')))
@@ -51,7 +51,7 @@ def hdf2df():
     return(df) 
 
 def img_dim():
-    hdrfile = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Please select hdr file:", filetypes= (('hdr files', '*.hdr'), ('all files', '*.*)))')))
+    hdrfile = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Pleaaase select hdr file:", filetypes= (('hdr files', '*.hdr'), ('all files', '*.*)))')))
     print('hdr file selected: ', hdrfile)  
     header_hdr = envi.read_envi_header(hdrfile)
     width = int(header_hdr['lines'])
@@ -71,10 +71,10 @@ def img_scale_mask(img):
     from sklearn.preprocessing import MinMaxScaler
     scaler = MinMaxScaler()
     #replace prediction outlayer with 0
-    img_tozero = np.where(img == img[0][0], 0, img)
+    img_tozero = np.where((img <0.05), 0, img)
     scaler.fit(img_tozero)
     img_scaled = scaler.transform(img_tozero)
-    img_scaled_mask = np.ma.masked_where(img_scaled == 0, img_scaled, copy=True)
+    img_scaled_mask = np.ma.masked_where(img_scaled == 0, img_scaled)
     return(img_tozero, img_scaled, img_scaled_mask)
 
 def compute_ssim(or_img, pred_img):
@@ -86,33 +86,43 @@ root = Tk()
 root.withdraw()
 
 #load summary products original png to compare
-Olindex3_scaled_mask, Olindex3_slice, Original_png = load_original_img()
+Olindex3_scaled, Olindex3_scaled_mask, Olindex3_slice, Original_png = load_original_img()
 
 #load the mtrdr hdf file to predict
 print('Select MTRDR to predict')
 tgt_pred = (hdf2df().fillna(0))
 
-#load linear regression model
+#
+load linear regression model
 LinR_model = load_model()
 
 ###### LINEAR REGRESSION prediction ######
 
-LinReg_tgt_pred = predict(LinR_model, tgt_pred)
+LinReg_pred = predict(LinR_model, tgt_pred)
 #conversion of the prediction back to 2d image
-LinReg_tgt_img = pred2img(LinReg_tgt_pred).astype('float64')
+LinReg_pred_img = pred2img(LinReg_pred).astype('float64')
 #scale the image in range 0-1
 #LinReg_scaled_mask = img_scale_mask(LinReg_tgt_img).astype('float64')
 
 # create all steps variable for debugging
-img_tozero, LinReg_scaled, LinReg_scaled_mask = img_scale_mask(LinReg_tgt_img)
+pred_lin_tozero, LinReg_scaled, LinReg_scaled_mask = img_scale_mask(LinReg_pred_img)
 
 #compute structural similarity index between original summary products and predictions. 
-LinReg_ssim = compute_ssim(Olindex3_scaled_mask, LinReg_scaled_mask)
+LinReg_ssim = compute_ssim(Olindex3_scaled, LinReg_scaled)
 
-#save the images
-cv.imwrite('Olindex3_original.png', Olindex3_scaled_mask*255)
-cv.imwrite('Olindex3_LinReg_prediction.png', LinReg_scaled_mask*255)
+# #save the images
+# cv.imwrite('Olindex3_original.png', Olindex3_scaled_mask*255)
+# cv.imwrite('Olindex3_LinReg_prediction_mask.png', LinReg_scaled_mask*255)
 
 ##### LOGISTIC REGRESSION prediction ######
 
-#WIP
+# LogR_model = load_model()
+
+# LogReg_pred = predict(LogR_model, tgt_pred)
+
+# LogReg_pred_img = pred2img(LogReg_pred).astype('float64')
+
+# pred_log_tozero, LogReg_scaled, LogReg_scaled_mask = img_scale_mask(LogReg_pred_img)
+
+# cv.imwrite('Olindex3_LogReg_prediction_mask.png', LogReg_scaled_mask*255)
+

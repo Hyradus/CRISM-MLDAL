@@ -34,8 +34,8 @@ def img_dim():
     height = int(header_hdr['samples'])
     return(width, height)
 
-def pred2img(pred_array):
-    width, height = img_dim()
+def pred2img(pred_array, width, height):
+    #width, height = img_dim()
     img = np.reshape(pred_array, (width, height))
     return(img)
 
@@ -60,11 +60,11 @@ def LinReg_pred(linR_model, target):
     linR_pred = linR_model.predict(target)
     return(linR_pred)
 
-def LinReg(X_train, Y_train, self_mtrdr):
+def LinReg(X_train, Y_train, self_mtrdr, width, height):
     print('Training Linear Regression')
     linR_model, mse, r2 = LinReg_train(X_train, Y_train, X_test, Y_test)
     linR_prediction = LinReg_pred(linR_model, self_mtrdr)
-    linR_self_img = pred2img(linR_prediction)
+    linR_self_img = pred2img(linR_prediction, width, height)
     return(linR_model, mse, r2, linR_self_img)    
 
 #       LOGISITC REGRESSION
@@ -93,13 +93,14 @@ def LogReg_pred(logR_model, target):
     prob = logR_model.predict_proba(target)
     return(pred, prob)
 
-def LogReg(X_train, Y_train, self_mtrdr):
+def LogReg(X_train, Y_train, self_mtrdr, width, height):
     maxiter=1000
     print('Training Logistic Regression')
     logR_model, logR_accuracy, logR_logloss = LogReg_train(X_train, Y_train, X_test, Y_test, maxiter)
     logR_prediction, logR_pred_proba = LogReg_pred(logR_model, self_mtrdr)
-    logR_self_img = pred2img(logR_prediction)
+    logR_self_img = pred2img(logR_prediction, width, height)
     return(logR_model, logR_prediction, logR_pred_proba, logR_self_img)
+
 
 def model_valid(model, X_train, Y_train):
     from sklearn.model_selection import cross_val_score
@@ -118,7 +119,7 @@ def save_models(model, name, savepath):
     joblib.dump(model, name)
 
 def make_folder(PATH):
-    savepath = PATH+'/OLINDEX3_models'
+    savepath = PATH+'/OLINDEX3_LinReg-LonReg_models'
     if os.path.exists(savepath):
            print('Folder exist, removing.')
            shutil.rmtree(savepath)
@@ -151,8 +152,8 @@ X = features_nonan.values
 Y = target.values
 
 #get cpu threads
-#jobs=psutil.cpu_count(logical=False)
-jobs = 2
+jobs=psutil.cpu_count(logical=False)-4
+#jobs = 
     
 #create train and test by splitting the dataset
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -161,8 +162,10 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_
 print('Select original mtrdr dataset: ')
 self_mtrdr = (hdf2df()).fillna(0)
 
+width, height = img_dim()
+
 #Linear Regression
-linR_model, mse, r2, linR_self_img = LinReg(X_train, Y_train, self_mtrdr)
+linR_model, mse, r2, linR_self_img = LinReg(X_train, Y_train, self_mtrdr, width, height)
 
 #save model
 linname = 'LinReg.pkl'
@@ -172,14 +175,8 @@ save_models(linR_model, linname, savepath)
 lin_scores = model_valid(linR_model, X_train, Y_train)
 
 #Logistic Regression
-logR_model, logR_prediction, logR_pred_proba, logR_self_img = LogReg(X_train, Y_train, self_mtrdr)
-logname = 'LinReg.pkl'
+logR_model, logR_prediction, logR_pred_proba, logR_self_img = LogReg(X_train, Y_train, self_mtrdr, width, height)
+logname = 'LogReg.pkl'
 save_models(logR_model, logname, savepath)
-log_scores = model_valid(logR_model, X_train, Y_train)
+# log_scores = model_valid(logR_model, X_train, Y_train)
 
-
-
-
-
-
-              
