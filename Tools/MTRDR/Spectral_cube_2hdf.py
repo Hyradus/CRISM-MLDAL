@@ -16,6 +16,12 @@ import pandas as pd
 import ntpath
 from timeit import default_timer as timer
 
+###### OPTIONS EDIT BEFORE RUN ######5
+#choice if convert CRISM no-data values (65536) to NaN)
+CHOICE_NAN = True
+
+###### END OPTIONS EDIT BEFORE RUN ######
+
 def path_leaf(tgtname):
     head, tail = ntpath.split(tgtname)
     return tail or ntpath.basename(head)
@@ -29,9 +35,14 @@ def img2np(hdrfile):
     #replace "nodata" values with np.nan
     #cube_np_nan = np.where(cube < cube.max(), cube, np.nan)
     #create index for wavelengths
-    cube_masked = np.ma.masked_where(cube == cube.max(), cube, copy=True)
     names = header_hdr['wavelength']
-    return(cube_masked, names)
+    if CHOICE_NAN == True:
+        print('removing nan')
+        cube = np.where(cube <65535, cube, np.nan)
+        # cube = np.ma.masked_where(cube == 65535, cube, copy=True)
+    else:
+        cube = cube
+    return(cube, names)
 
 def CUBE_np2df(np_cube, names):
     cube_df = pd.DataFrame()
@@ -41,37 +52,24 @@ def CUBE_np2df(np_cube, names):
         cube_df[series.name] = series        
     return(cube_df)
 
-def CUBE_df2csv(cube_df, hdrfile):
-    dfname = path_leaf(hdrfile)
-    savepath = os.path.dirname(hdrfile)
-    savename = savepath + '/' + dfname + '.csv'
-    start = timer()
-    %time cube_df.to_csv(savename, index=False)
-    end = timer()
-    print(savename, ' csv exported in: ', savepath, 'in: ', end-start, 's')
-    return(end-start)
-
 def CUBE_df2hdf(cube_df, hdrfile):
-    dfname = path_leaf(hdrfile)
     savepath = os.path.dirname(hdrfile)
-    savename = savepath + '/' + dfname + '.hdf'
+    import pathlib
+    name = pathlib.PurePath(hdrfile).name.split('.')[0] + '.hdf'
+    savename = savepath + '/'+name
     start = timer()
-    %time cube_df.to_hdf(savename, 'df')
+    cube_df.to_hdf(savename, 'df')
     end = timer()
     print(savename, ' hdf exported in: ', savepath, 'in: ', end-start, 's')
 
 
 def main(hdrfile):
-    cube_np_nan, names = img2np(hdrfile)
-    cube_df = CUBE_np2df(cube_np_nan, names)
-    
-    #print('Saving to csv')
-    #export cube to csv
-    #csv_time = CUBE_df2csv(cube_df, hdrfile)
+    cube, names = img2np(hdrfile)
+    cube_df = CUBE_np2df(cube, names)
     print('Saving to hdf')
     #export cube to hdf
-    hdf_time = CUBE_df2hdf(cube_df, hdrfile)
-    #return(cube_np_nan, cube_df)
+    CUBE_df2hdf(cube_df, hdrfile)
+    return(cube, cube_df)
     
 
 if __name__ == "__main__":
@@ -89,6 +87,6 @@ if __name__ == "__main__":
     else:
         modpath = args.wdir
 
-main(hdrfile)
+cube, cube_df = main(hdrfile)
 
 

@@ -14,6 +14,20 @@ global file_type
 global data_type
 global imgs
 
+def make_folder(PATH, fname):
+    savepath = PATH+'/'+fname
+    if os.path.exists(savepath):
+           print('Folder exist, removing.')
+           shutil.rmtree(savepath)
+           time.sleep(1)
+           os.mkdir(savepath)
+           print('New model folder created')
+    else:
+           print('Folder not exist, creating.')
+           os.mkdir(savepath)
+           print('Created new Trained_Models Folder')
+    return(savepath)
+
 def read_conf():
 # reading config file for minerals
     cfg = filedialog.askopenfilename(parent=root,initialdir=os.getcwd(),title="Please select spectral configuration file:", filetypes= (('csv files', '*.csv'), ('all files', '*.*)))')))
@@ -71,13 +85,13 @@ def main(PATH, SPECTRAL_INDEX, savedir):
     os.chdir(PATH+"/..")
     path = os.getcwd()
     prefix = os.path.basename(path)
-    savepath = PATH +'/'+ savedir + '/'
+    # savepath = PATH +'/'+ savedir + '/'
     THR_DF = thr_df(PATH)  
     BOL_DF = bool_df(PATH)
-    feat_name = os.path.join(savepath + prefix + '_' + data_type + '_features.hdf')
-    class_name = os.path.join(savepath + prefix + '_' + data_type +'_classes.hdf')
-    THR_DF.to_hdf(feat_name, '_classes')
-    BOL_DF.to_hdf(class_name, '_bool_classes')
+    class_name = os.path.join(savedir +'/' + prefix + '_' + data_type + '_classes.hdf')
+    class_bol_name = os.path.join(savedir +'/'+ prefix + '_' + data_type +'_classes_bol.hdf')
+    THR_DF.to_hdf(class_name, '_classes')
+    BOL_DF.to_hdf(class_bol_name, '_bool_classes')
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -96,17 +110,20 @@ if __name__ == "__main__":
     else:
         PATH = args.wdir
         
-    savedir = 'Processed'
-    if os.path.exists(PATH+'/'+savedir):
-        print('Folder exist, removing.')
-        shutil.rmtree(PATH+'/'+savedir)
-        time.sleep(1)
-        os.mkdir(PATH+'/'+savedir)
-        print('New Features folder created')
-    else:
-        print('Folder not exist, creating.')
-        os.mkdir(PATH+'/'+savedir)
-        print('Created new Features Folder')
+    # savedir = 'Processed'
+    # if os.path.exists(PATH+'/'+savedir):
+    #     print('Folder exist, removing.')
+    #     shutil.rmtree(PATH+'/'+savedir)
+    #     time.sleep(1)
+    #     os.mkdir(PATH+'/'+savedir)
+    #     print('New Features folder created')
+    # else:
+    #     print('Folder not exist, creating.')
+    #     os.mkdir(PATH+'/'+savedir)
+    #     print('Created new Features Folder')
+        
+    savedir=make_folder(PATH, 'Processed')
+    
     if args.cfg is None:
         SPECTRAL_INDEX = read_conf()
     else:
